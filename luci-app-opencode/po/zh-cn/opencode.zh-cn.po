@@ -52,8 +52,12 @@ msgstr "打开软件页面"
 # 配置项
 msgid "Basic Settings"
 msgstr "基础设置"
+msgid "Service"
+msgstr "服务"
 msgid "Enable"
 msgstr "启用"
+msgid "Disabled"
+msgstr "禁用"
 msgid "Port"
 msgstr "端口"
 msgid "Web Service Port"
@@ -66,6 +70,9 @@ msgid "Password"
 msgstr "访问密码"
 msgid "Please enter the password for accessing the software."
 msgstr "请输入访问软件的密码."
+msgid "WebUI"
+msgstr "访问页面"
+
 
 # 按钮（扩展）
 msgid "Restart Service"

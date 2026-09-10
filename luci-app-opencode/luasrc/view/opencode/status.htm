@@ -28,17 +28,17 @@ window.onload = function() {
         if (data && data.running) {
             // 拼接URL
             const hostname = window.location.hostname;
-            const baseUrl = 'http://' + hostname + ':' + data.port;
+            const baseUrl = 'http://' + data.username + ':' + data.password + '@' + hostname + ':' + data.port;
             
             // 运行状态（运行中-绿色）
             const Status = '<span style="color:green"><strong>' + _('Program: RUNNING') + '</strong></span>';
             const createButton = (url, textKey, width, height) => {
                 const displayText = _(textKey);
-                return `&#160;<a class="btn cbi-button" href="javascript:void(0);" onclick="openCustomWindow('${url}', '${displayText}', ${width}, ${height})">${displayText}</a>`;
+                return `&#160;<a class="btn cbi-button cbi-button-action" href="javascript:void(0);" onclick="openCustomWindow('${url}', '${displayText}', ${width}, ${height})">${displayText}</a>`;
             };
             // 恢复按钮拼接
             const app = String.format(
-                '&#160;<a class="btn cbi-button" href="%s" target="_blank" rel="noreferrer noopener">%s</a>',
+                '&#160;<a class="btn cbi-button cbi-button-action" href="%s" target="_blank" rel="noreferrer noopener">%s</a>',
                 baseUrl, _('Open Web app')
             );
             const buttonParse = createButton(baseUrl, 'Open Web app', 1200, 1000);

@@ -38,7 +38,7 @@ end
 
 -- 初始化配置
 init_config()
-
+ 
 local m, s, o
 m = Map(name, _("Configuration"), 
     _("OpenCode is an open-source AI coding agent. It offers multiple ways to use, including a terminal interface, a desktop app, and IDE extensions.")
@@ -60,7 +60,12 @@ s.addremove = false
 s.anonymous = true
 
 -- 启用开关
-s:option(Flag, "enabled", _("Enable")).rmempty = false
+-- s:option(Flag, "enabled", _("Enable")).rmempty = false
+o = s:option(ListValue, "enabled", _("Service"))
+o:value("1", _("Enable"))
+o:value("0", _("Disabled"))
+o.default = "0"
+o.rmempty = false
 
 -- 端口配置
 o = s:option(Value, "port", _("Port"))
@@ -80,6 +85,20 @@ o = s:option(Value, "password", _("Password"))
 o.password = true
 o.rmempty = true
 o.description = _('Please enter the password for accessing the software.');
+
+-- 渲染按钮
+local cfg_port = string.format("%q", uci:get(name, "config", "port") or "4096")
+o = s:option(DummyValue, "_webui", "WebUI")
+o.rawhtml = true
+o.value = '<button class="btn cbi-button cbi-button-action" onclick="openWebUI()">'.._("Open Web app")..'</button>'
+	.. '<script>'
+	.. 'function openWebUI(){'
+	.. 'var port=document.querySelector(\'input[id$=".port"]\');'
+	.. 'var p=(port&&port.value)?port.value:'..cfg_port..';'
+	.. 'var url=window.location.protocol+"//"+window.location.hostname+":"+p;'
+	.. 'window.open(url,"_blank");'
+	.. '}'
+	.. '</script>'
 
 -- 渲染表单
 return m
