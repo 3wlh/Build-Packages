@@ -88,7 +88,7 @@ o.description = _('Please enter the password for accessing the software.');
 
 -- 渲染按钮
 local cfg_port = string.format("%q", uci:get(name, "config", "port") or "4096")
-o = s:option(DummyValue, "_webui", "WebUI")
+o = s:option(DummyValue, "_webui", _("WebUI"))
 o.rawhtml = true
 o.value = '<button class="btn cbi-button cbi-button-action" onclick="openWebUI()">'.._("Open Web app")..'</button>'
 	.. '<script>'
