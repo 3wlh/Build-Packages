@@ -59,7 +59,12 @@ s.addremove = false
 s.anonymous = true
 
 -- 启用开关
-s:option(Flag, "enabled", _("Enable")).rmempty = false
+-- s:option(Flag, "enabled", _("Enable")).rmempty = false
+o = s:option(ListValue, "enabled", _("Service"))
+o:value("1", _("Enable"))
+o:value("0", _("Disabled"))
+o.default = "0"
+o.rmempty = false
 
 -- 端口配置
 o = s:option(Value, "port", _("Port"))
@@ -74,6 +79,20 @@ o.default = generate_token()
 o.password = true
 o.rmempty = true
 o.description = _('Automatically generated 32-bit token');
+
+-- 渲染按钮
+local cfg_port = string.format("%q", uci:get(name, "config", "port") or "8887")
+o = s:option(DummyValue, "_webui", _("WebUI"))
+o.rawhtml = true
+o.value = '<button class="btn cbi-button cbi-button-action" onclick="openWebUI()">'.._("Open Web app")..'</button>'
+	.. '<script>'
+	.. 'function openWebUI(){'
+	.. 'var port=document.querySelector(\'input[id$=".port"]\');'
+	.. 'var p=(port&&port.value)?port.value:'..cfg_port..';'
+	.. 'var url=window.location.protocol+"//"+window.location.hostname+":"+p;'
+	.. 'window.open(url,"_blank");'
+	.. '}'
+	.. '</script>'
 
 -- 渲染表单
 return m
