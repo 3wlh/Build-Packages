@@ -66,6 +66,12 @@ msgid "Online Config URL"
 msgstr "在线配置网址"
 msgid "URL for online configuration pull"
 msgstr "拉取在线配置的网址"
+msgid "Download Config"
+msgstr "下载配置"
+msgid "Download"
+msgstr "下载"
+msgid "Download the configuration file to the local"
+msgstr "将配置文件下载到本地"
 
 # 按钮（扩展）
 msgid "Restart Service"
