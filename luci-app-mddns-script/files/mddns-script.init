@@ -18,7 +18,7 @@ start() {
 	[ "$enabled" -eq "1" ] || return 1
 	local port netlink path_config pwd_config online_config token
 	config_get port "config" "port" "5663"
-	config_get_bool netlink "config" "netlink" "0"
+	config_get_bool netlink "config" "netlink"
 	config_get dir "config" "path_config" "/etc/${NAME}"
 	config_get pwd "config" "pwd_config"
 	config_get url "config" "online_config"
@@ -29,7 +29,7 @@ start() {
 	set -- -p "$port" -c "$dir"
 	[ "$netlink" -eq "1" ] && set -- "$@" -n
 	[ -n "${pwd}" ] && set -- "$@" -pwd $pwd
-	[ -n "${url}" ] && set -- "$@" -url $url;; esac
+	[ -n "${url}" ] && set -- "$@" -url $url
 	[ -n "${token}" ] && set -- "$@" -token $token
 	# 构建启动参数
 	start-stop-daemon -S -q -b -x "$PROG" -- "$@"
