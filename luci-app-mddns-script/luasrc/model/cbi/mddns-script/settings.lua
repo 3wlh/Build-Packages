@@ -122,14 +122,16 @@ o.datatype = "string"
 o.description = _('URL for online configuration pull');
 
 -- 下载配置到本地
-local json = fs.readfile("/etc/"..name.."/config.json") or "{}"
-local data  = nixio.bin.b64encode(json)
-o = s:option(DummyValue, "_download", _("Download Config"))
-o.rawhtml = true
-o.value = '<a class="btn cbi-button cbi-button-action" '
-    .. 'href="data:application/json;base64,' .. data .. '" '
-    .. 'download="config.json">' .. _("Download") .. '</a>'
-o.description = _('Download the configuration file to the local');
+local json = fs.readfile("/etc/"..name.."/config.json")
+if json then
+    local data  = nixio.bin.b64encode(json)
+    o = s:option(DummyValue, "_download", _("Download Config"))
+    o.rawhtml = true
+    o.value = '<a class="btn cbi-button cbi-button-action" '
+        .. 'href="data:application/json;base64,' .. data .. '" '
+        .. 'download="config.json">' .. _("Download") .. '</a>'
+    o.description = _('Download the configuration file to the local');
+end
 
 -- 渲染表单
 return m
