@@ -50,6 +50,7 @@ local function init_config()
     -- 基础配置默认值
     uci:set(name, "config", "enabled", uci:get(name, "config", "enabled") or 0)
     uci:set(name, "config", "port", uci:get(name, "config", "port") or "5063")
+    uci:set(name, "config", "netlink", uci:get(name, "config", "netlink") or 1)
     uci:set(name, "config", "path_config", uci:get(name, "config", "path_config") or "/etc/"..name)
     uci:set(name, "config", "pwd_config", uci:get(name, "config", "pwd_config") or decrypt_key)
     uci:set(name, "config", "online_config", uci:get(name, "config", "online_config") or "")
@@ -90,6 +91,14 @@ o.datatype = "port"
 o.default = "5063"
 o.rmempty = false
 o.description = _("Web Service Port")
+
+-- 配置网卡监控
+o = s:option(ListValue, "netlink", _("Netlink"))
+o:value("1", _("Enable"))
+o:value("0", _("Disabled"))
+o.default = "1"
+o.rmempty = false
+o.description = _('Whether to enable network card monitoring');
 
 -- 配置文件路径
 o = s:option(Value, "path_config", _("Config Path"))

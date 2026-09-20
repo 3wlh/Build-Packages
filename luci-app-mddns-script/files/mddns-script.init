@@ -16,8 +16,9 @@ start() {
 	local enabled
 	config_get_bool enabled "config" "enabled" "0"
 	[ "$enabled" -eq "1" ] || return 1
-	local port path_config pwd_config online_config token
+	local port netlink path_config pwd_config online_config token
 	config_get port "config" "port" "5663"
+	config_get_bool netlink "config" "netlink" "0"
 	config_get dir "config" "path_config" "/etc/${NAME}"
 	config_get pwd "config" "pwd_config"
 	config_get url "config" "online_config"
@@ -26,6 +27,7 @@ start() {
 	[ -d ${dir} ] || mkdir -pm 755 "${dir}"
 	# 构建运行参数
 	set -- -p "$port" -c "$dir"
+	[ "$netlink" -eq "1" ] && set -- "$@" -n
 	[ -n "${pwd}" ] && set -- "$@" -pwd $pwd
 	[ -n "${url}" ] && set -- "$@" -url $url;; esac
 	[ -n "${token}" ] && set -- "$@" -token $token
