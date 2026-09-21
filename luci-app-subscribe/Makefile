@@ -39,7 +39,6 @@ define Build/Prepare
 	$(call Build/Po2lmo)
 	$(CP) -fr root $(PKG_BUILD_DIR)
 	$(CP) -fr luasrc $(PKG_BUILD_DIR)
-	$(CP) -fr scripts $(PKG_BUILD_DIR)
 	chmod -R 755 $(PKG_BUILD_DIR)
 	ls $(PKG_BUILD_DIR)
 endef
