@@ -26,7 +26,8 @@ local function init_config()
     uci:set(name, "config", "enabled", uci:get(name, "config", "enabled") or 0)
     uci:set(name, "config", "port", uci:get(name, "config", "port") or "5063")
     uci:set(name, "config", "host", uci:get(name, "config", "host") or "")
-    uci:set(name, "config", "uuid", uci:get(name, "config", "uuid") or generateUUID)
+    uci:set(name, "config", "uuid", uci:get(name, "config", "uuid") or "")
+    uci:set(name, "config", "auth", uci:get(name, "config", "auth") or "")
     uci:set(name, "config", "subscribe", uci:get(name, "config", "subscribe") or "")
     return
 end
@@ -37,7 +38,7 @@ init_config()
 local m, s, o
 m = Map(name, _("Configuration"), 
     _("This is a software that automatically generates node subscriptions.") .. "<br/>" ..    
-    _("Official reference") .. ": <a href='https://github.com/3wlh/' target='_blank'>MultiDDNS</a>"))
+    _("Official reference") .. ": <a href='https://github.com/3wlh/' target='_blank'>Subscribe</a>")
 
 m.apply_on_parse = true -- 解析阶段立即写入配置文件
 m.on_after_commit = function(self)
@@ -66,21 +67,27 @@ o.description = _("Service Port")
 
 -- 配置域名
 o = s:option(Value, "host", _("Host"))
-o.default = ""
 o.rmempty = true
 o.datatype = "string"
 o.description = _('Configure the domain name of the subscription node');
 
 -- 配置UUID
 o = s:option(Value, "uuid", _("UUID"))
-o.default = decrypt_key
-o.password = true
+o.placeholder = generateUUID()
 o.rmempty = true
+o.datatype = "string"
 o.description = _('Configure the UUID of the subscription node');
+
+-- 配置UUID
+o = s:option(Value, "auth", _("Auth"))
+o.placeholder = "admin:password"
+o.rmempty = true
+o.datatype = "string"
+o.description = _('Configure SOCKS Authentication');
 
 -- 配置订阅
 o = s:option(Value, "subscribe", _("Subscribe"))
-o.placeholder = "vmess=4333|vless=4334|socks=4335"
+o.placeholder = "vless=4333|vmess=4334|socks=4335"
 o.rmempty = true
 o.datatype = "string"
 -- 配置订阅的节点

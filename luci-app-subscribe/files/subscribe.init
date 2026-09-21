@@ -16,21 +16,18 @@ start() {
 	local enabled
 	config_get_bool enabled "config" "enabled" "0"
 	[ "$enabled" -eq "1" ] || return 1
-	local port netlink path_config pwd_config online_config token
-	config_get port "config" "port" "5663"
-	config_get_bool netlink "config" "netlink"
-	config_get dir "config" "path_config" "/etc/${NAME}"
-	config_get pwd "config" "pwd_config"
-	config_get url "config" "online_config"
-	config_get token "config" "token"
-	# 创建配置目录
-	[ -d ${dir} ] || mkdir -pm 755 "${dir}"
+	local port host uuid auth subscribe
+	config_get port "config" "port" "8066"
+	config_get host "config" "host"
+	config_get uuid "config" "uuid"
+	config_get auth "config" "auth"
+	config_get subscribe "config" "subscribe"
 	# 构建运行参数
-	set -- -p "$port" -c "$dir"
-	[ "$netlink" -eq "1" ] && set -- "$@" -n
-	[ -n "${pwd}" ] && set -- "$@" -pwd $pwd
-	[ -n "${url}" ] && set -- "$@" -url $url
-	[ -n "${token}" ] && set -- "$@" -token $token
+	set -- -p "$port"
+	[ -n "${host}" ] && set -- "$@" -h "${host}"
+	[ -n "${uuid}" ] && set -- "$@" -u "${uuid}"
+	[ -n "${auth}" ] && set -- "$@" -a "${auth}"
+	[ -n "${subscribe}" ] && set -- "$@" -s "${subscribe}"
 	# 构建启动参数
 	start-stop-daemon -S -q -b -x "$PROG" -- "$@"
 	writelog "${NAME} Starting ..."
