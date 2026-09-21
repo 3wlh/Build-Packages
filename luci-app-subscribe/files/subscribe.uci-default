@@ -1,0 +1,21 @@
+#!/bin/sh
+name="subscribe"
+[ ! -f "/usr/share/ucitrack/luci-app-${name}.json" ] && {
+    cat > /usr/share/ucitrack/luci-app-${name}.json << EOF
+{
+    "config": "${name}",
+    "init": "${name}"
+}
+EOF
+}
+
+uci -q batch <<-EOF >/dev/null
+	delete ucitrack.${name}
+	add ucitrack ${name}
+	set ucitrack.@${name}[-1].init=${name}
+	commit ucitrack
+EOF
+
+rm -f luci-indexcache.*
+/etc/init.d/${name} enable
+exit 0

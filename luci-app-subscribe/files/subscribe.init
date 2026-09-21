@@ -1,0 +1,43 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+STOP=10
+
+NAME="subscribe"
+PROG="$(find /usr/sbin/ -maxdepth 1 -name "${NAME}*" | head -1)"
+
+writelog() {
+	# echo "$(date "+%Y.%m.%d_%H%M%S") - ${1}" >>/tmp/$NAME.log
+	logger -t ${NAME} "${1}"
+}
+
+start() {
+	config_load "$NAME"
+	local enabled
+	config_get_bool enabled "config" "enabled" "0"
+	[ "$enabled" -eq "1" ] || return 1
+	local port netlink path_config pwd_config online_config token
+	config_get port "config" "port" "5663"
+	config_get_bool netlink "config" "netlink"
+	config_get dir "config" "path_config" "/etc/${NAME}"
+	config_get pwd "config" "pwd_config"
+	config_get url "config" "online_config"
+	config_get token "config" "token"
+	# 创建配置目录
+	[ -d ${dir} ] || mkdir -pm 755 "${dir}"
+	# 构建运行参数
+	set -- -p "$port" -c "$dir"
+	[ "$netlink" -eq "1" ] && set -- "$@" -n
+	[ -n "${pwd}" ] && set -- "$@" -pwd $pwd
+	[ -n "${url}" ] && set -- "$@" -url $url
+	[ -n "${token}" ] && set -- "$@" -token $token
+	# 构建启动参数
+	start-stop-daemon -S -q -b -x "$PROG" -- "$@"
+	writelog "${NAME} Starting ..."
+}
+
+stop() {
+	# kill -9 $(pgrep -f "${PROG}*" | sed "s/$$//g") 2>/dev/null
+	start-stop-daemon -K -q -s KILL -x "$PROG" 2>/dev/null
+	writelog "${NAME} stopped ..."
+}

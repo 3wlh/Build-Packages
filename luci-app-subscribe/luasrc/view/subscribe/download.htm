@@ -1,0 +1,78 @@
+<%+header%>
+
+<div class="cbi-map">
+    <fieldset class="cbi-section">
+        <legend><%:Binary Not Installed%></legend>
+        <div class="cbi-section-descr" style="padding:12px;">
+
+            <p style="color:red; font-size:14px; margin-bottom:12px;">
+                <strong>&#9888;&#65039; <%:The binary was not found in /usr/sbin/%></strong>
+            </p>
+
+            <table class="cbi-section-table" style="margin-top:8px; width:100%;">
+                <tr>
+                    <td style="width:30%; padding:3px 0;"><%:Device architecture%></td>
+                    <td style="padding:3px 0;"><code><%=arch%></code> &#8594; <code><%=pkg_arch%></code></td>
+                </tr>
+                <tr>
+                    <td style="padding:3px 0;"><%:Binary file%></td>
+                    <td style="padding:3px 0;"><code><%=bin_name%></code></td>
+                </tr>
+                <tr>
+                    <td style="padding:3px 0;"><%:Install path%></td>
+                    <td style="padding:3px 0;"><code><%=bin_dir%></code></td>
+                </tr>
+                <tr>
+                    <td style="padding:3px 0; vertical-align:top;"><%:Download URL:%></td>
+                    <td style="padding:3px 0;"><code style="word-break:break-all;"><%=bin_url%></code></td>
+                </tr>
+            </table>
+
+            <span id="dl_tip" style="display:block; margin-top:16px;"></span>
+            <div class="cbi-page-actions">
+                <input type="button" class="cbi-button cbi-button-apply" id="dl_btn" value="<%:Download%>" onclick="downloadBin()" />
+            </div>
+
+        </div>
+    </fieldset>
+</div>
+
+<script>
+var dlBtn = document.getElementById('dl_btn');
+var dlTip = document.getElementById('dl_tip');
+var dlTotal = 0;
+var pollData = {total:0,url:'<%=bin_url%>',path:'<%=bin_dir%>'};   // 回传总大小: 首次 0 (后端发 HEAD), 拿到后更新跳过 HEAD
+
+// 设置按钮 + 提示 (纯 UI; 终态由调用方 XHR.halt() 停轮询)
+function setDlState(busy, btnText, tipColor, tipHtml, reload) {
+    dlBtn.disabled = !!busy;
+    dlBtn.value = btnText;
+    dlTip.innerHTML = '<span style="color:' + tipColor + '">' + tipHtml + '</span>';
+    if (reload) setTimeout(function() { window.location.reload(); }, reload);
+}
+
+var dlUrl = window.location.pathname.replace(/\/+$/, '') + '/download_exec';
+// XHR.poll: 2 秒轮询 download_exec (首次约 250ms 即触发); 网络错误自动下一轮重试
+// pollData.total 动态回传: 后端首次 HEAD 取总大小, 后续轮询带 total 跳过 HEAD
+XHR.poll(5, dlUrl, pollData, function(xhr, d) {
+    if (xhr.status != 200 || !d) return;            // 网络错误/非 JSON, 等下一轮
+    if (d.total) { dlTotal = d.total; pollData.total = dlTotal; }
+    if (d.success) {
+        XHR.halt();                                  // 完成, 停止轮询
+        setDlState(true, '<%:Downloading...%>', 'green', '&#10004; <%:Download successful. Entering settings...%>', 1500);
+    } else if (d.downloading) {
+        var pct = d.percent || 0;
+        dlTip.innerHTML = '<span style="color:#666"><%:Downloading, please wait...%></span> ' +
+            '<span style="display:inline-block;width:140px;height:10px;border:1px solid #ccc;border-radius:5px;overflow:hidden;vertical-align:middle;">' +
+            '<span style="display:block;height:100%;width:' + pct + '%;background:#5cb85c;"></span></span>' +
+            ' <span style="color:#666">' + pct + '%</span>';
+    } else {
+        XHR.halt();                                  // 非下载中且非完成, 停止轮询
+    }
+});
+
+// 初始状态 (脚本在 DOM 末尾, 元素已就绪)
+setDlState(true, '<%:Downloading...%>', '#666', '<%:Downloading, please wait...%>');
+</script>
+
+<%+footer%>

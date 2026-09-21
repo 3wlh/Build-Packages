@@ -34,6 +34,7 @@ on:
           - all
           - luci-app-mddns
           - luci-app-mddns-script
+          - luci-app-subscribe
           - luci-app-opencode
           - luci-app-scriptrun
           - luci-app-napcatapi

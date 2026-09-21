@@ -1,0 +1,20 @@
+{
+	"luci-app-subscribe": {
+		"description": "Grant UCI access for luci-app-subscribe",
+		"read": {
+			"uci": [ "subscribe" ],
+			"ubus": {
+				"service": [ "list" ]
+			},
+			"file": {
+				"/usr/sbin/subscribe": [ "exec" ],
+				"/*": [ "read" ]
+			}
+		},
+		"write": {
+			"file": {
+				"/*": [ "write" ]
+			}
+		}
+	}
+}
