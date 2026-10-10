@@ -90,9 +90,11 @@ endef
 
 define Package/$(PKG_NAME)/install
 	echo -e "\033[1;32m install \033[0m"
+	$(CP) $(PKG_BUILD_DIR)/root/* $(1)/
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/Ai-Work-Assistant/aiwork-server $(1)/usr/sbin/
-	$(CP) $(PKG_BUILD_DIR)/root/* $(1)/
+	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
+	$(CP) $(PKG_BUILD_DIR)/luasrc/* $(1)/usr/lib/lua/luci/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/aiwork-assistant.init $(1)/etc/init.d/aiwork-assistant
 	$(INSTALL_DIR) $(1)/etc/config
