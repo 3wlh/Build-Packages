@@ -29,22 +29,19 @@ window.onload = function() {
             // 拼接URL
             const hostname = window.location.hostname;
             const baseUrl = 'http://' + hostname + ':' + data.port;
-            const parseUrl = baseUrl + '?token=' + data.token;
-            const logUrl = baseUrl + '/logs?token=' + data.token;
 
             // 运行状态（运行中-绿色）
-            const Status = '<span style="color:green"><strong>' + _('Program: RUNNING') + '</strong></span>';
+            const Status = '<span style="color:green"><strong>' + _('程序: 运行中') + '</strong></span>';
             const createButton = (url, textKey, width, height) => {
                 const displayText = _(textKey);
-                return `&#160;<a class="btn cbi-button" href="javascript:void(0);" onclick="openCustomWindow('${url}', '${displayText}', ${width}, ${height})">${displayText}</a>`;
+                return `&#160;<a class="btn cbi-button cbi-button-action" href="javascript:void(0);" onclick="openCustomWindow('${url}', '${displayText}', ${width}, ${height})">${displayText}</a>`;
             };
             // 恢复按钮拼接
-            const buttonParse = createButton(parseUrl, 'Open Web parse', 1200, 1100);
-            const buttonLogs  = createButton(logUrl,   'Open Web logs',  1200, 1050);
-            statusElem.innerHTML = Status;// + buttonParse + buttonLogs;
+            const buttonParse = createButton(baseUrl, '打开网页窗口', 1000, 800);
+            statusElem.innerHTML = Status + buttonParse;// + buttonLogs;
         } else {
             // 运行状态（未运行中-红色）
-            statusElem.innerHTML = '<span style="color:red"><strong>' + _('Program: NOT RUNNING') + '</strong></span>';
+            statusElem.innerHTML = '<span style="color:red"><strong>' + _('程序: 未运行') + '</strong></span>';
         }
     });
 };

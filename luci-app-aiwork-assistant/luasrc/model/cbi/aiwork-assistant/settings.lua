@@ -83,5 +83,15 @@ o.rmempty = true
 o.datatype = "string"
 o.description = _('数据保存的目录');
 
+-- 打开服务管理页面
+o = s:option(DummyValue, "_open", _("页面操作"))
+o.rawhtml = true
+o.value = '<a class="btn cbi-button cbi-button-action" href="javascript:void(0);" '
+    .. 'onclick="var p=document.getElementById(\'cbid.' .. name .. '.config.port\').value || \'7864\';'
+    .. 'window.open(\'http://\'+location.hostname+\':\'+p,\'_blank\');'
+    .. 'return false;">'
+    .. _("打开网页") .. '</a>'
+o.description = _('打开服务管理页面')
+
 -- 渲染表单
 return m
