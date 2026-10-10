@@ -1,0 +1,20 @@
+{
+	"luci-app-aiwork-assistant": {
+		"description": "Grant UCI access for luci-app-aiwork-assistant",
+		"read": {
+			"uci": [ "aiwork-assistant" ],
+			"ubus": {
+				"service": [ "list" ]
+			},
+			"file": {
+				"/usr/sbin/aiwork-assistant": [ "exec" ],
+				"/*": [ "read" ]
+			}
+		},
+		"write": {
+			"file": {
+				"/*": [ "write" ]
+			}
+		}
+	}
+}

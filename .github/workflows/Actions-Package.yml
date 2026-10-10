@@ -37,6 +37,7 @@ on:
           - luci-app-subscribe
           - luci-app-opencode
           - luci-app-scriptrun
+          - luci-app-aiwork-assistant
           - luci-app-napcatapi
           - luci-app-photopea
           - luci-app-bemfa-server

@@ -1,0 +1,59 @@
+<script type="text/javascript">
+// 自定义弹窗函数
+// 自定义弹窗函数
+function openCustomWindow(url, windowName, width = 800, height = 600) {
+    if (!url || !windowName) return console.error('❌ URL和窗口名称为必填参数');
+
+    const left = (window.screen.availWidth - width) / 2;
+    const top = (window.screen.availHeight - height) / 2;
+    
+    const features = `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,status=no`;
+
+    try {
+        const newWindow = window.open(url, windowName, features);
+        if (!newWindow) console.warn('🚫 弹窗被浏览器拦截');
+        return newWindow;
+    } catch (err) {
+        console.error('❌ 打开窗口出错：', err);
+        return null;
+    }
+}
+
+// 5秒轮询状态
+window.onload = function() {
+    // 修复接口路径：对应控制器的正确路径
+    var statusElem = document.getElementById('status_id');
+    if (!statusElem) return;
+    XHR.poll(5, L.url("admin", "services", "<%=self.Name%>_status"), null, function(status, data) {
+        if (data && data.running) {
+            // 拼接URL
+            const hostname = window.location.hostname;
+            const baseUrl = 'http://' + hostname + ':' + data.port;
+            const parseUrl = baseUrl + '?token=' + data.token;
+            const logUrl = baseUrl + '/logs?token=' + data.token;
+
+            // 运行状态（运行中-绿色）
+            const Status = '<span style="color:green"><strong>' + _('Program: RUNNING') + '</strong></span>';
+            const createButton = (url, textKey, width, height) => {
+                const displayText = _(textKey);
+                return `&#160;<a class="btn cbi-button" href="javascript:void(0);" onclick="openCustomWindow('${url}', '${displayText}', ${width}, ${height})">${displayText}</a>`;
+            };
+            // 恢复按钮拼接
+            const buttonParse = createButton(parseUrl, 'Open Web parse', 1200, 1100);
+            const buttonLogs  = createButton(logUrl,   'Open Web logs',  1200, 1050);
+            statusElem.innerHTML = Status;// + buttonParse + buttonLogs;
+        } else {
+            // 运行状态（未运行中-红色）
+            statusElem.innerHTML = '<span style="color:red"><strong>' + _('Program: NOT RUNNING') + '</strong></span>';
+        }
+    });
+};
+</script>
+
+<!-- 状态显示区域 -->
+<fieldset class="cbi-section">
+    <legend><%:Status%></legend>
+    <p id="status_id">
+        <em><%:Collecting data...%></em>
+    </p>
+</fieldset>
