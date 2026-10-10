@@ -22,14 +22,14 @@ start() {
 	config_get token "config" "token"
 	config_get data_path "config" "data_path" "/etc/${NAME}/data"
 	# 创建配置目录
-	[ -d ${data_path} ] || mkdir -pm 755 "${dir}"
+	[ -d ${data_path} ] || mkdir -pm 755 "${data_path}"
 	# 构建运行参数
 	export AIWORK_WEB_DIST="$web_path"
 	export AIWORK_LISTEN_ADDR="0.0.0.0:$port"
 	export AIWORK_DATA_DIR="${data_path}"
 	[ -n "${token}" ] && export AIWORK_ADMIN_TOKEN="$token"
 	# 构建启动参数
-	start-stop-daemon -S -q -b -x "$PROG" -- "$@"
+	start-stop-daemon -S -q -b -x "$PROG"
 	writelog "${NAME} Starting ..."
 }
 
