@@ -16,7 +16,8 @@ ifeq ($(ARCH),x86_64)
 	PKG_ARCH:=amd64
 endif
 
-FILE_URL:=https://github.com/3wlh/Build-Source/releases/download/GitHub-Actions_aiwork-assistant/aiwork-assistant-linux-$(PKG_ARCH)
+
+FILE_URL:=https://github.com/3wlh/Build-Source/releases/download/GitHub-Actions_aiwork-assistant/aiwork-assistant-linux-$(PKG_ARCH).tar.gz
 GZ_FILE:=$(BIN_NAME).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/PKG_BUILD_$(PKG_NAME)
 
