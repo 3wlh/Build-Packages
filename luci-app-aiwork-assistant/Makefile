@@ -46,7 +46,7 @@ endef
 define Extract/Files
 	echo -e "\033[1;32m Extract：Files \033[0m"
 	mkdir -p $(PKG_BUILD_DIR)/Ai-Work-Assistant
-	tar -zxf $(PKG_BUILD_DIR)/$(WEB_FILE) -C $(PKG_BUILD_DIR)/Ai-Work-Assistant
+	tar -zxf $(PKG_BUILD_DIR)/$(GZ_FILE) -C $(PKG_BUILD_DIR)/Ai-Work-Assistant
 endef
 
 define Build/Po2lmo
