@@ -1,0 +1,110 @@
+<%+header%>
+<style type="text/css">
+.smbvfs-badge { display:inline-block; padding:2px 10px; border-radius:10px; font-size:12px; color:#fff; }
+.smbvfs-ok  { background:#5cb85c; }
+.smbvfs-no  { background:#999; }
+.smbvfs-err { background:#d9534f; }
+.smbvfs-table { width:100%; border-collapse:collapse; }
+.smbvfs-table td, .smbvfs-table th { padding:6px 12px; text-align:left;
+	border-bottom:1px solid #e5e5e5; }
+.smbvfs-table th { font-weight:bold; }
+.smbvfs-toggle { cursor:pointer; user-select:none; }
+.smbvfs-toggle:hover { opacity:.85; }
+#smbvfs-log { margin-top:1em; padding:1em; background:#222; color:#eee;
+	white-space:pre-wrap; word-break:break-all; display:none; border-radius:4px; }
+</style>
+
+<h2 name="content"><%:SMB VFS%></h2>
+<div class="cbi-section-descr"><%:为所有 Samba 共享写入 vfs objects = catia fruit streams_xattr 及 fruit 选项；xattr 走扩展流存储，macOS 客户端不再生成 ._ 边车文件。%></div>
+
+<div class="cbi-section">
+	<h3><%:服务状态%></h3>
+	<table class="smbvfs-table">
+		<tr><td style="width:12em"><%:Samba 服务%></td><td id="st-service">-</td></tr>
+		<tr><td><%:运行状态%></td><td id="st-running">-</td></tr>
+		<tr><td><%:smbvfs 守护%></td><td id="st-daemon">-</td></tr>
+		<tr><td><%:开机自启%></td><td><span id="st-enabled" title="<%:点击切换%>">-</span></td></tr>
+	</table>
+</div>
+
+<div class="cbi-section">
+	<h3><%:Samba 共享%></h3>
+	<table class="smbvfs-table" id="share-table">
+		<tr>
+			<th style="width:20%"><%:共享%></th><th style="width:30%"><%:路径%></th>
+			<th style="width:35%">vfs objects</th><th><%:fruit%></th>
+		</tr>
+	</table>
+</div>
+
+<div class="cbi-section" style="text-align:center; background:transparent; box-shadow:none; padding:0 1em">
+	<pre id="smbvfs-log" style="text-align:left"></pre>
+	<input type="button" class="cbi-button cbi-button-apply" id="btn-apply"
+		value="<%:应用并重启%>" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+function badge(text, cls) {
+	return '<span class="smbvfs-badge ' + cls + '">' + text + '</span>';
+}
+
+function loadStatus() {
+	XHR.get('<%=url("admin/services/smbvfs/status")%>', null, function (xhr, d) {
+		if (!d) return;
+
+		document.getElementById('st-service').textContent = d.service || '<%:未安装%>';
+		document.getElementById('st-running').innerHTML = !d.service
+			? badge('<%:缺失%>', 'smbvfs-err')
+			: (d.running ? badge('<%:运行中%>', 'smbvfs-ok') : badge('<%:未运行%>', 'smbvfs-err'));
+		document.getElementById('st-daemon').innerHTML = d.daemon
+			? badge('<%:监听中%>', 'smbvfs-ok') : badge('<%:未运行%>', 'smbvfs-no');
+		var enabledEl = document.getElementById('st-enabled');
+		enabledEl.textContent = d.enabled ? '<%:已启用%>' : '<%:未启用%>';
+		enabledEl.className = 'smbvfs-badge smbvfs-toggle ' + (d.enabled ? 'smbvfs-ok' : 'smbvfs-no');
+		enabledEl.dataset.next = d.enabled ? '0' : '1';
+
+		var tbl = document.getElementById('share-table');
+		while (tbl.rows.length > 1) tbl.deleteRow(1);
+		(d.shares || []).forEach(function (s) {
+			var r = tbl.insertRow(-1);
+			r.insertCell(-1).textContent = s.name;
+			r.insertCell(-1).textContent = s.path;
+			r.insertCell(-1).textContent = s.vfs_objects || '-';
+			r.insertCell(-1).innerHTML = s.fruit
+				? badge('<%:已配置%>', 'smbvfs-ok') : badge('<%:未配置%>', 'smbvfs-no');
+		});
+	});
+}
+
+var btn = document.getElementById('btn-apply');
+var logEl = document.getElementById('smbvfs-log');
+
+btn.addEventListener('click', function () {
+	btn.disabled = true;
+	logEl.style.display = '';
+	logEl.textContent = '<%:执行中 ...%>';
+	XHR.post('<%=url("admin/services/smbvfs/apply")%>?token=<%=token%>',
+		{ token: '<%=token%>' },
+		function (xhr, data) {
+			btn.disabled = false;
+			if (data && data.log) {
+				logEl.textContent = data.log;
+			} else {
+				var body = (xhr.responseText || '').replace(/<[^>]+>/g, ' ').slice(0, 500);
+				logEl.textContent = 'HTTP ' + xhr.status + (body ? '\n' + body : '');
+			}
+			loadStatus();
+		});
+});
+
+document.getElementById('st-enabled').addEventListener('click', function () {
+	XHR.post('<%=url("admin/services/smbvfs/boot")%>?token=<%=token%>',
+		{ token: '<%=token%>', state: this.dataset.next },
+		function () { loadStatus(); });
+});
+
+loadStatus();
+//]]>
+</script>
+<%+footer%>

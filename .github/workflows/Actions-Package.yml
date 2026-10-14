@@ -38,6 +38,7 @@ on:
           - luci-app-opencode
           - luci-app-scriptrun
           - luci-app-aiwork-assistant
+          - luci-app-smbvfs
           - luci-app-napcatapi
           - luci-app-photopea
           - luci-app-bemfa-server
