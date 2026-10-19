@@ -1,0 +1,17 @@
+{
+	"luci-app-navpage": {
+		"description": "Grant UCI access for luci-app-navpage",
+		"read": {
+			"uci": [ "navpage" ],
+			"ubus": {
+				"service": [ "list" ]
+			},
+			"file": {
+				"/usr/sbin/navpage": [ "exec" ]
+			}
+		},
+		"write": {
+			"uci": [ "navpage" ]
+		}
+	}
+}

@@ -1,0 +1,24 @@
+<script type="text/javascript">
+// 5秒轮询状态
+window.onload = function() {
+    var statusElem = document.getElementById('status_id');
+    if (!statusElem) return;
+    XHR.poll(5, L.url("admin", "services", "<%=self.Name%>_status"), null, function(status, data) {
+        if (data && data.running) {
+            // 运行状态（运行中-绿色）
+            statusElem.innerHTML = '<span style="color:green"><strong>' + _('Program: RUNNING') + '</strong></span>';
+        } else {
+            // 运行状态（未运行-红色）
+            statusElem.innerHTML = '<span style="color:red"><strong>' + _('Program: NOT RUNNING') + '</strong></span>';
+        }
+    });
+};
+</script>
+
+<!-- 状态显示区域 -->
+<fieldset class="cbi-section">
+    <legend><%:Status%></legend>
+    <p id="status_id">
+        <em><%:Collecting data...%></em>
+    </p>
+</fieldset>

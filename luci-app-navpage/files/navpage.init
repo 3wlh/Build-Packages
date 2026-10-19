@@ -1,0 +1,39 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+STOP=10
+
+NAME="navpage"
+PROG="$(find /usr/sbin/ -maxdepth 1 -name "${NAME}*" | head -1)"
+
+writelog() {
+	# echo "$(date "+%Y.%m.%d_%H%M%S") - ${1}" >>/tmp/$NAME.log
+	logger -t ${NAME} "${1}"
+}
+
+start() {
+	config_load "$NAME"
+	local enabled
+	config_get_bool enabled "config" "enabled" "0"
+	[ "$enabled" -eq "1" ] || return 1
+	local port data user pwd
+	config_get port "config" "port" "8080"
+	config_get user "config" "user"
+	config_get pwd "config" "password"
+	config_get data "config" "path_data" "/etc/${NAME}"
+	# 创建数据目录
+	[ -d ${data} ] || mkdir -pm 755 "${data}"
+	# 构建运行参数
+	set -- -p "$port" -d "$data"
+	[ -n "${user}" ] && set -- "$@" -u "$user"
+	[ -n "${pwd}" ] && set -- "$@" -pwd "$pwd"
+	# 构建启动参数
+	start-stop-daemon -S -q -b -x "$PROG" -- "$@"
+	writelog "${NAME} Starting ..."
+}
+
+stop() {
+	# kill -9 $(pgrep -f "${PROG}*" | sed "s/$$//g") 2>/dev/null
+	start-stop-daemon -K -q -s KILL -x "$PROG" 2>/dev/null
+	writelog "${NAME} stopped ..."
+}
