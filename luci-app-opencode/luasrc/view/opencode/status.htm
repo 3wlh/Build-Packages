@@ -28,7 +28,7 @@ window.onload = function() {
         if (data && data.running) {
             // 拼接URL
             const hostname = window.location.hostname;
-            const baseUrl = 'http://' + data.username + ':' + data.password + '@' + hostname + ':' + data.port;
+            const baseUrl = 'http://' + hostname + ':' + data.port;
             
             // 运行状态（运行中-绿色）
             const Status = '<span style="color:green"><strong>' + _('Program: RUNNING') + '</strong></span>';

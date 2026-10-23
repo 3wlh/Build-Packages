@@ -21,10 +21,11 @@ start() {
 	config_get username "config" "username" "opencode"
 	config_get password "config" "password"
 	# 创建配置目录
-	[[ -n "${username}" ]] && export OPENCODE_SERVER_USERNAME="$username"
-	[[ -n "${password}" ]] && export OPENCODE_SERVER_PASSWORD="$password"
+	[ -n "${username}" ] && export OPENCODE_SERVER_USERNAME="$username"
+	[ -n "${password}" ] && export OPENCODE_SERVER_PASSWORD="$password"
 	# 构建启动参数
-	start-stop-daemon -S -q -b -x "$PROG" -- web --hostname 0.0.0.0 --port ${port}
+	set -- web --hostname 0.0.0.0 --port ${port}
+	start-stop-daemon -S -q -b -x "$PROG" -- "${@}"
 	log "${NAME} Starting ..."
 }
 

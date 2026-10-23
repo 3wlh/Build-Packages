@@ -90,7 +90,7 @@ o.description = _('Please enter the password for accessing the software.');
 local cfg_port = string.format("%q", uci:get(name, "config", "port") or "4096")
 o = s:option(DummyValue, "_webui", _("WebUI"))
 o.rawhtml = true
-o.value = '<button class="btn cbi-button cbi-button-action" onclick="openWebUI()">'.._("Open Web app")..'</button>'
+o.value = '<button class="btn cbi-button cbi-button-action" onclick="openWebUI()">'.._("Open Web Page")..'</button>'
 	.. '<script>'
 	.. 'function openWebUI(){'
 	.. 'var port=document.querySelector(\'input[id$=".port"]\');'

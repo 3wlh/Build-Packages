@@ -47,7 +47,10 @@ msgstr "程序：检测异常"
 
 # 按钮文本
 msgid "Open Web app"
-msgstr "打开软件页面"
+msgstr "打开网页窗口"
+msgid "Open Web Page"
+msgstr "打开网页"
+
 
 # 配置项
 msgid "Basic Settings"
@@ -71,7 +74,7 @@ msgstr "访问密码"
 msgid "Please enter the password for accessing the software."
 msgstr "请输入访问软件的密码."
 msgid "WebUI"
-msgstr "访问页面"
+msgstr "页面操作"
 
 
 # 按钮（扩展）
