@@ -25,10 +25,10 @@ start() {
 	# 创建数据目录
 	[ -d ${data} ] || mkdir -pm 755 "${data}"
 	# 构建运行参数
-	set -- -p "$port" -d "$data"
-	[ -n "${user}" ] && set -- "$@" -u "$user"
-	[ -n "${pwd}" ] && set -- "$@" -pwd "$pwd"
-	[ -n "${url}" ] && set -- "$@" -url "$url"
+	set -- -p "$port" -d "'$data'"
+	[ -n "${user}" ] && set -- "$@" -u "'$user'"
+	[ -n "${pwd}" ] && set -- "$@" -pwd "'$pwd'"
+	[ -n "${url}" ] && set -- "$@" -url "'$url'"
 	# 构建启动参数
 	start-stop-daemon -S -q -b -x "$PROG" -- "$@"
 	writelog "${NAME} Starting ..."
