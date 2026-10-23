@@ -79,7 +79,7 @@ o = s:option(Value, "url", _("JSON Url"))
 o.placeholder = "http(s)://example.com/navpage-config.json"
 o.rmempty = true
 o.datatype = "string"
-o.description = _("Please enter your remote JSON address above")
+o.description = _("Please enter your remote import JSON address above")
 
 -- 渲染按钮
 local cfg_port = string.format("%q", uci:get(name, "config", "port") or "8080")

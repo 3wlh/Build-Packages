@@ -21,7 +21,7 @@ start() {
 	config_get user "config" "user"
 	config_get pwd "config" "password"
 	config_get data "config" "path_data" "/etc/${NAME}"
-	config_get data "config" "url"
+	config_get url "config" "url"
 	# 创建数据目录
 	[ -d ${data} ] || mkdir -pm 755 "${data}"
 	# 构建运行参数
