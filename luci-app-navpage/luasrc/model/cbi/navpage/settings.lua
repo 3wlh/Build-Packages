@@ -18,6 +18,7 @@ local function init_config()
     uci:set(name, "config", "user", uci:get(name, "config", "user") or "")
     uci:set(name, "config", "password", uci:get(name, "config", "password") or "")
     uci:set(name, "config", "path_data", uci:get(name, "config", "path_data") or "/etc/"..name)
+    uci:set(name, "config", "url", uci:get(name, "config", "url") or "")
     return
 end
 
@@ -27,7 +28,7 @@ init_config()
 local m, s, o
 m = Map(name, _("Configuration"), 
     _("A lightweight navigation page written in Go.") .. "<br/>" ..    
-    _("Official reference") .. ": <a href='https://github.com/3wlh/' target='_blank'>NavPage</a>")
+    _("Official reference") .. ": <a href='https://github.com/3wlh/NavPage' target='_blank'>NavPage</a>")
 
 m.apply_on_parse = true -- 解析阶段立即写入配置文件
 m.on_after_commit = function(self)
@@ -72,6 +73,13 @@ o.default = "/etc/"..name
 o.rmempty = true
 o.datatype = "string"
 o.description = _("Please enter your data catalog path above")
+
+-- 数据目录配置
+o = s:option(Value, "url", _("JSON Url"))
+o.placeholder = "http(s)://example.com/navpage-config.json"
+o.rmempty = true
+o.datatype = "string"
+o.description = _("Please enter your remote JSON address above")
 
 -- 渲染按钮
 local cfg_port = string.format("%q", uci:get(name, "config", "port") or "8080")

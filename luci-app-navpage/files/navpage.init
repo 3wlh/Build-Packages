@@ -16,17 +16,19 @@ start() {
 	local enabled
 	config_get_bool enabled "config" "enabled" "0"
 	[ "$enabled" -eq "1" ] || return 1
-	local port data user pwd
+	local port data user pwd url
 	config_get port "config" "port" "8080"
 	config_get user "config" "user"
 	config_get pwd "config" "password"
 	config_get data "config" "path_data" "/etc/${NAME}"
+	config_get data "config" "url"
 	# 创建数据目录
 	[ -d ${data} ] || mkdir -pm 755 "${data}"
 	# 构建运行参数
 	set -- -p "$port" -d "$data"
 	[ -n "${user}" ] && set -- "$@" -u "$user"
 	[ -n "${pwd}" ] && set -- "$@" -pwd "$pwd"
+	[ -n "${url}" ] && set -- "$@" -url "$url"
 	# 构建启动参数
 	start-stop-daemon -S -q -b -x "$PROG" -- "$@"
 	writelog "${NAME} Starting ..."
