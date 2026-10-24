@@ -43,17 +43,16 @@ s:option(Flag, "enabled", _("Enable")).rmempty = false
 
 -- 端口
 o= s:option(Value,"port", _("Port"))
-o.datatype = "string"
 o.default = "5056"
-o.description = "Web Service Port<br>"
-o.rmempty = false
+o.datatype = "string"
+o.rmempty = true
+o.description = _("Web Service Port")
 
 -- 令牌
 o = s:option(Value, "token",  _("Token"))
 o.datatype = "string"
 o.password = true
-o.default = ""
-o.description = "Token used for remote wake-up of devices<br>"
 o.rmempty = true
+o.description = _("Token used for remote wake-up of devices")
 
 return m
