@@ -34,13 +34,6 @@ define Package/$(PKG_NAME)/description
 	Plug-in for Wake-on-LAN devices.
 endef
 
-define Download/Files
-	echo -e "\033[1;32m Download：$(BIN_URL)\033[0m"
-	if [ ! -f $(PKG_BUILD_DIR)/$(BIN_FILE) ] ; then \
-		wget -q $(BIN_URL) -O $(PKG_BUILD_DIR)/$(BIN_FILE); \
-	fi
-endef
-
 define Build/Po2lmo
 	if ! command -v po2lmo >/dev/null 2>&1; then \
 		git clone https://github.com/openwrt-dev/po2lmo.git && cd po2lmo; \
@@ -53,7 +46,6 @@ endef
 define Build/Prepare
 	echo -e "\033[31m Prepare：$(PKG_ARCH)\033[0m"
 	mkdir -pm 775 $(PKG_BUILD_DIR)
-	$(call Download/Files)
 	$(call Build/Po2lmo)
 	$(CP) -fr root $(PKG_BUILD_DIR)
 	$(CP) -fr ./luasrc $(PKG_BUILD_DIR)
@@ -72,6 +64,7 @@ define Package/$(PKG_NAME)/postinst
 endef
 
 define Build/Compile
+	echo -e "\033[1;32m Compile：Wake-on-LAN \033[0m"
 	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) \
 		-o $(PKG_BUILD_DIR)/$(BIN_FILE) $(PKG_BUILD_DIR)/src/main.c $(TARGET_LDFLAGS)
 endef
