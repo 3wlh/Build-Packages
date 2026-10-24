@@ -17,7 +17,6 @@ ifeq ($(ARCH),x86_64)
 endif
 
 BIN_FILE:=$(BIN_NAME)
-BIN_URL:=https://github.com/3wlh/Actions-Source/releases/download/GitHub-Actions_wake-on-lan/wake-on-lan-$(PKG_ARCH)
 PKG_BUILD_DIR:=$(BUILD_DIR)/PKG_BUILD_$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
@@ -57,7 +56,8 @@ define Build/Prepare
 	$(call Download/Files)
 	$(call Build/Po2lmo)
 	$(CP) -fr root $(PKG_BUILD_DIR)
-	$(CP) -fr luasrc $(PKG_BUILD_DIR)
+	$(CP) -fr ./luasrc $(PKG_BUILD_DIR)
+	$(CP) -fr ./src $(PKG_BUILD_DIR)
 	chmod -R 755 $(PKG_BUILD_DIR)
 	ls $(PKG_BUILD_DIR)
 endef
@@ -72,7 +72,8 @@ define Package/$(PKG_NAME)/postinst
 endef
 
 define Build/Compile
-	touch $(BUILD_DIR)/$(PKG_NAME).built
+	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) \
+		-o $(PKG_BUILD_DIR)/$(BIN_FILE) $(PKG_BUILD_DIR)/src/main.c $(TARGET_LDFLAGS)
 endef
 
 define Package/$(PKG_NAME)/conffiles
