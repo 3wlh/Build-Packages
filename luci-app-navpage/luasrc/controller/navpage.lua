@@ -14,7 +14,7 @@ end
 -- 二进制文件名与下载地址
 local bin_file = "navpage"
 local cn_url = "https://cnb.cool/3wlh/Build-File/-/releases/download/GitHub-Actions_navpage/navpage-%s"
-local default_url = "https://github.com/3wlh/Build-Source/releases/download/GitHub-Actions_navpage/navpage-%s"
+local default_url = "https://github.com/3wlh/NavPage/releases/download/GitHub-Actions_navpage/navpage-%s"
 
 -- 主入口: 实时检查二进制, 存在则跳转设置页, 不存在则显示下载页面
 function action_index(index)
