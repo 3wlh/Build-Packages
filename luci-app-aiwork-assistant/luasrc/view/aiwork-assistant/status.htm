@@ -37,7 +37,7 @@ window.onload = function() {
                 return `&#160;<a class="btn cbi-button cbi-button-action" href="javascript:void(0);" onclick="openCustomWindow('${url}', '${displayText}', ${width}, ${height})">${displayText}</a>`;
             };
             // 恢复按钮拼接
-            const buttonParse = createButton(baseUrl, '打开网页窗口', 1000, 800);
+            const buttonParse = createButton(baseUrl, '打开网页窗口', 1200, 800);
             statusElem.innerHTML = Status + buttonParse;// + buttonLogs;
         } else {
             // 运行状态（未运行中-红色）
