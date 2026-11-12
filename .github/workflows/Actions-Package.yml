@@ -16,9 +16,9 @@ on:
       
       sdk:
         description: |
-          选择编译插件
+          选择编译SDK
         required: false
-        default: "all"
+        default: "Openwrt"
         type: choice
         options:
           - Openwrt
